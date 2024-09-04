@@ -18,4 +18,22 @@ class FirestoreService {
   Future<void> updateUserData(String uid, AppUser data) {
     return datas.doc(uid).update(data.toMap());
   }
+
+  Future<bool> checkUsernameExist(String username) async {
+    final QuerySnapshot result = await datas.where('userName', isEqualTo: username).limit(1).get();
+    final List<DocumentSnapshot> documents = result.docs;
+    return documents.isNotEmpty;
+  }
+
+
+  //Dont forget to use nullable becase the data may not be found
+  Future<AppUser?> getUserDataByUsername(String username) async {
+    final QuerySnapshot result = await datas.where('userName', isEqualTo: username).limit(1).get();
+    final List<DocumentSnapshot> documents = result.docs;
+
+    if (documents.isNotEmpty) {
+      return AppUser.fromMap(documents.first.data() as Map<String, dynamic>);
+    }
+    return null;
+  }
 }

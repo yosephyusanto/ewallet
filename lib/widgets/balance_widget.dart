@@ -16,8 +16,9 @@ class BalanceWidget extends StatefulWidget {
 }
 
 class _BalanceWidgetState extends State<BalanceWidget> {
-  final TextEditingController _balanceAmountController = TextEditingController();
-  final TextEditingController _userIdController = TextEditingController();
+  final TextEditingController _balanceAmountController =
+      TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
 
   void topUpClicked() {
     showDialog(
@@ -123,9 +124,9 @@ class _BalanceWidgetState extends State<BalanceWidget> {
                 const SizedBox(height: 16.0),
                 TextField(
                   decoration: const InputDecoration(
-                    labelText: "User's ID",
+                    labelText: "Username",
                   ),
-                  controller: _userIdController,
+                  controller: _usernameController,
                 ),
               ],
             ),
@@ -135,7 +136,7 @@ class _BalanceWidgetState extends State<BalanceWidget> {
           ElevatedButton(
             onPressed: () async {
               String amountText = _balanceAmountController.text;
-              String recepientUID = _userIdController.text.trim();
+              String recipientUsername = _usernameController.text;
 
               try {
                 double amount = double.parse(amountText);
@@ -145,31 +146,27 @@ class _BalanceWidgetState extends State<BalanceWidget> {
                 }
 
                 FirestoreService firestoreService = FirestoreService();
-                //Get recipient document using UID
-                DocumentSnapshot recipientDoc =
-                    await firestoreService.getUserData(recepientUID);
 
-                if (!recipientDoc.exists || recipientDoc.data() == null) {
-                  throw Exception('Recipient UID not found');
+                AppUser? recipientData = await firestoreService
+                    .getUserDataByUsername(recipientUsername);
+
+                if (recipientData == null) {
+                  throw Exception('username not found');
                 }
 
-                //save recipient data to object
-                AppUser recipient = AppUser.fromMap(
-                    recipientDoc.data() as Map<String, dynamic>);
-
                 widget.data.balance -= amount;
-                recipient.balance += amount;
+                recipientData.balance += amount;
 
                 //update firestore for sender and recipient
                 firestoreService.updateUserData(widget.data.uid, widget.data);
-                firestoreService.updateUserData(recipient.uid, recipient);
+                firestoreService.updateUserData(recipientData.uid, recipientData);
 
                 setState(() {
                   //rebuild widget
                 });
 
                 _balanceAmountController.text = '';
-                _userIdController.text = '';
+                _usernameController.text = '';
 
                 Navigator.pop(context);
               } catch (e) {
@@ -242,14 +239,12 @@ class _BalanceWidgetState extends State<BalanceWidget> {
               ),
               AnimatedTextKit(
                 animatedTexts: [
-                  TypewriterAnimatedText(
-                    widget.data.userName,
-                    textStyle: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 24.0,
-                    ),
-                    speed: const Duration(milliseconds: 250)
-                  ),
+                  TypewriterAnimatedText(widget.data.userName,
+                      textStyle: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 24.0,
+                      ),
+                      speed: const Duration(milliseconds: 250)),
                 ],
                 repeatForever: true,
               ),

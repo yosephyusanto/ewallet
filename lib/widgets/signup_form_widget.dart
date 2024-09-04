@@ -32,6 +32,23 @@ class _SignupFormWidgetState extends State<SignupFormWidget> {
       });
 
       try {
+        final FirestoreService firestoreService = FirestoreService();
+        bool usernameAlreadyExist = await firestoreService.checkUsernameExist(_usernameController.text);
+
+        if (usernameAlreadyExist) {
+          setState(() {
+            _isLoading = false;
+          });
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content:
+                  Text('Username already exists, please choose another one'),
+            ),
+          );
+          return;
+        }
+
         UserCredential userCredential =
             await _auth.createUserWithEmailAndPassword(
           email: _emailController.text,
@@ -47,7 +64,6 @@ class _SignupFormWidgetState extends State<SignupFormWidget> {
           phoneNumber: _phoneNumberController.text,
         );
 
-        final FirestoreService firestoreService = FirestoreService();
         firestoreService.addUser(user);
 
         // Handle successful registration here (e.g., navigate to another page)
@@ -61,7 +77,6 @@ class _SignupFormWidgetState extends State<SignupFormWidget> {
           context,
           MaterialPageRoute(builder: (context) => const LoginPage()),
         );
-
       } on FirebaseAuthException catch (e) {
         // Handle registration error
         ScaffoldMessenger.of(context).showSnackBar(
