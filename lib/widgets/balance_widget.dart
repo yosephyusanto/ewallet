@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ewallet/models/users_model.dart';
 import 'package:ewallet/services/firestore_service.dart';
 import 'package:flutter/material.dart';
