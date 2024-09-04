@@ -26,7 +26,7 @@ class FirestoreService {
   }
 
 
-  //Dont forget to use nullable becase the data may not be found
+  //Dont forget to use nullable because the data may not be found
   Future<AppUser?> getUserDataByUsername(String username) async {
     final QuerySnapshot result = await datas.where('userName', isEqualTo: username).limit(1).get();
     final List<DocumentSnapshot> documents = result.docs;
