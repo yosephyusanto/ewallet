@@ -125,7 +125,7 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                 if (value == null || value.isEmpty) {
                   return 'Please enter your password';
                 }
-                if (value.length <= 8) {
+                if (value.length < 8) {
                   return 'Password must be at least 8 characters long';
                 }
                 return null;
