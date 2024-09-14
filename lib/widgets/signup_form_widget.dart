@@ -19,11 +19,8 @@ class _SignupFormWidgetState extends State<SignupFormWidget> {
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
 
-  bool _isLoading = false;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<void> register() async {
     if (_formKey.currentState?.validate() ?? false) {
@@ -318,7 +315,7 @@ class _SignupFormWidgetState extends State<SignupFormWidget> {
               : SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: register,
+                    onPressed: register(),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFBDE864),
                       shape: RoundedRectangleBorder(
