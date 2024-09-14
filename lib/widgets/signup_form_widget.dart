@@ -1,8 +1,7 @@
-import 'package:ewallet/models/users_model.dart';
-import 'package:ewallet/pages/login_page.dart';
-import 'package:ewallet/services/firestore_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ewallet/providers/auth_provider.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SignupFormWidget extends StatefulWidget {
   const SignupFormWidget({super.key});
@@ -19,76 +18,33 @@ class _SignupFormWidgetState extends State<SignupFormWidget> {
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
-
-  Future<void> register() async {
+  Future<void> register(AuthProvider authProvider) async {
     if (_formKey.currentState?.validate() ?? false) {
-      setState(() {
-        _isLoading = true;
-      });
+      String? errorMessage = await authProvider.register(
+        email: _emailController.text,
+        password: _passwordController.text,
+        fullName: _fullNameController.text,
+        username: _usernameController.text,
+        phonenumber: _phoneNumberController.text,
+      );
 
-      try {
-        final FirestoreService firestoreService = FirestoreService();
-        bool usernameAlreadyExist = await firestoreService.checkUsernameExist(_usernameController.text);
-
-        if (usernameAlreadyExist) {
-          setState(() {
-            _isLoading = false;
-          });
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content:
-                  Text('Username already exists, please choose another one'),
-            ),
-          );
-          return;
-        }
-
-        UserCredential userCredential =
-            await _auth.createUserWithEmailAndPassword(
-          email: _emailController.text,
-          password: _passwordController.text,
-        );
-
-        String uid = userCredential.user?.uid ?? '';
-
-        AppUser user = AppUser(
-          uid: uid,
-          fullName: _fullNameController.text,
-          userName: _usernameController.text,
-          phoneNumber: _phoneNumberController.text,
-        );
-
-        firestoreService.addUser(user);
-
-        // Handle successful registration here (e.g., navigate to another page)
+      if (errorMessage == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Registration Successful')),
-        );
-
-        await Future.delayed(const Duration(seconds: 2));
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginPage()),
-        );
-      } on FirebaseAuthException catch (e) {
-        // Handle registration error
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Registration Failed: ${e.message}')),
-        );
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
+            const SnackBar(content: Text('Registration Successful')));
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(errorMessage)));
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context, listen: true);
+
     return Form(
       key: _formKey,
       child: Column(
@@ -308,14 +264,14 @@ class _SignupFormWidgetState extends State<SignupFormWidget> {
           const SizedBox(
             height: 16.0,
           ),
-          _isLoading
+          authProvider.isLoading
               ? const CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFBDE864)),
                 )
               : SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: register(),
+                    onPressed: () => register(authProvider),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFBDE864),
                       shape: RoundedRectangleBorder(

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ewallet/models/users_model.dart';
 import 'package:ewallet/services/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -63,5 +64,31 @@ class AuthProvider with ChangeNotifier {
       setLoading(false);
       return e.message;
     }
+  }
+
+  Future<AppUser?> login(
+      {required String email, required String password}) async {
+    setLoading(true);
+
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+
+      String uid = userCredential.user?.uid ?? '';
+
+      DocumentSnapshot userDoc = await _firestoreService.getUserData(uid);
+
+      if (!userDoc.exists || userDoc.data() == null) {
+        throw Exception('User data not found');
+      }
+
+      AppUser user = AppUser.fromMap(userDoc.data() as Map<String, dynamic>);
+      return user;
+    } on FirebaseAuthException catch (e) {
+      return Future.error('Login failed: ${e.message}');
+    } finally {
+      setLoading(false);
+    }
+
   }
 }
