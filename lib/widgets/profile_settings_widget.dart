@@ -16,28 +16,26 @@ class _ProfileSettingsWidgetState extends State<ProfileSettingsWidget> {
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   fetchUserData();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
 
-  // Future<void> fetchUserData() async {
-  //   try {
-  //     FirestoreService firestoreService = FirestoreService();
-  //     DocumentSnapshot doc =
-  //         await firestoreService.getUserData(widget.data.uid);
-  //     AppUser user = AppUser.fromMap(doc.data() as Map<String, dynamic>);
-
-  //     // Update controllers with fetched data
-  //     _fullNameController.text = user.fullName;
-  //     _phoneNumberController.text = user.phoneNumber;
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Failed to load user data: $e')),
-  //     );
-  //   }
-  // }
+  Future<void> fetchUserData() async {
+    try {
+      //listen false karena tidak menggunakan method yang didalamnya ada notify listener, atau dengan kata lain hanya pelru atribut saja 
+      AppUser? user = Provider.of<UserProvider>(context, listen: false).user!; //memanggil getter untuk mendapat value dari atribute _user di class userProvider
+     
+      // Update controllers with fetched data
+      _fullNameController.text = user.fullName;
+      _phoneNumberController.text = user.phoneNumber;
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to load user data: $e')),
+      );
+    }
+  }
 
   void onEditButtonClicked(AppUser user) {
     showDialog(

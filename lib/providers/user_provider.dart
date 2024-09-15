@@ -44,7 +44,8 @@ class UserProvider with ChangeNotifier {
     return null;
   }
 
-  Future<void> updateProfile(String uid, String fullname, String phonenumber) async {
+  Future<void> updateProfile(
+      String uid, String fullname, String phonenumber) async {
     _user!.fullName = fullname;
     _user!.phoneNumber = phonenumber;
 
@@ -52,4 +53,6 @@ class UserProvider with ChangeNotifier {
 
     notifyListeners();
   }
+
+  
 }
