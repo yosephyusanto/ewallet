@@ -2,6 +2,7 @@
 import 'package:ewallet/models/users_model.dart';
 import 'package:ewallet/pages/home_page.dart';
 import 'package:ewallet/providers/auth_provider.dart';
+import 'package:ewallet/providers/user_provider.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,16 +30,18 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
           password: _passwordController.text,
         );
 
-        if(user != null){
-           ScaffoldMessenger.of(context).showSnackBar(
+        if (user != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Login Successful')),
           );
+
+          Provider.of<UserProvider>(context, listen: false).setUser(user);
 
           await Future.delayed(const Duration(seconds: 2));
 
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => HomePage(data: user)),
+            MaterialPageRoute(builder: (context) => HomePage()),
           );
         }
       } catch (e) {

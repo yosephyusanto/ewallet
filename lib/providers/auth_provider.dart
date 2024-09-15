@@ -89,6 +89,5 @@ class AuthProvider with ChangeNotifier {
     } finally {
       setLoading(false);
     }
-
   }
 }

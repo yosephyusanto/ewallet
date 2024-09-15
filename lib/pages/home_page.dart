@@ -1,12 +1,9 @@
-import 'package:ewallet/models/users_model.dart';
 import 'package:ewallet/widgets/balance_widget.dart';
 import 'package:ewallet/widgets/profile_settings_widget.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  final AppUser data;
-
-  const HomePage({super.key, required this.data});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -93,9 +90,9 @@ class _HomePageState extends State<HomePage>
   Widget showContent(int idx) {
     switch (idx) {
       case 0:
-        return BalanceWidget(data: widget.data);
+        return BalanceWidget();
       case 1:
-        return ProfileSettingsWidget(data: widget.data);
+        return ProfileSettingsWidget();
       default:
         return const Text('Page Not Found');
     }

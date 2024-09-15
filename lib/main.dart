@@ -1,6 +1,7 @@
 import 'package:ewallet/firebase_options.dart';
 import 'package:ewallet/pages/splash_screen.dart';
 import 'package:ewallet/providers/auth_provider.dart';
+import 'package:ewallet/providers/user_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -19,6 +20,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: const MyApp(),
     ),

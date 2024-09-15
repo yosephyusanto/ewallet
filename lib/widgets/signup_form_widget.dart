@@ -1,3 +1,4 @@
+import 'package:ewallet/pages/login_page.dart';
 import 'package:ewallet/providers/auth_provider.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,9 @@ class _SignupFormWidgetState extends State<SignupFormWidget> {
       if (errorMessage == null) {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Registration Successful')));
+        await Future.delayed(const Duration(seconds: 2));
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => LoginPage()));
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(errorMessage)));
