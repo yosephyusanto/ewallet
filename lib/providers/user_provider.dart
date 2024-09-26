@@ -30,6 +30,10 @@ class UserProvider with ChangeNotifier {
       return 'Recepient not found, Please make sure to enter the correct Username!';
     }
 
+    if (recepient.userName == _user!.userName) {
+      return "Can't transfer to yourself";
+    }
+
     if (amount > _user!.balance) {
       return 'Unsufficient balance!';
     }
@@ -53,6 +57,4 @@ class UserProvider with ChangeNotifier {
 
     notifyListeners();
   }
-
-  
 }
