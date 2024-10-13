@@ -1,4 +1,3 @@
-import 'package:ewallet/pages/signup_page.dart';
 import 'package:flutter/material.dart';
 
 class LoginFooterWidget extends StatelessWidget {
@@ -15,11 +14,9 @@ class LoginFooterWidget extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            Navigator.push(
+            Navigator.pushNamed(
               context,
-              MaterialPageRoute(
-                builder: (context) => const SignupPage(),
-              ),
+              'register-screen'
             );
           },
           style: TextButton.styleFrom(

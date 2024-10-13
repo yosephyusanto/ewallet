@@ -1,4 +1,7 @@
 import 'package:ewallet/firebase_options.dart';
+import 'package:ewallet/pages/home_page.dart';
+import 'package:ewallet/pages/login_page.dart';
+import 'package:ewallet/pages/signup_page.dart';
 import 'package:ewallet/pages/splash_screen.dart';
 import 'package:ewallet/providers/auth_provider.dart';
 import 'package:ewallet/providers/user_provider.dart';
@@ -41,6 +44,12 @@ class MyApp extends StatelessWidget {
       ),
       home: const SplashScreen(),
       debugShowCheckedModeBanner: false,
+      initialRoute: 'splash-screen',
+      routes: {
+        'login-screen' : (context) => const LoginPage(),
+        'register-screen': (context) => const SignupPage(),
+        'home-screen': (context) => const HomePage(),
+      },
     );
   }
 }
