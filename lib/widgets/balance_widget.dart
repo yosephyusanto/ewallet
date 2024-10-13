@@ -50,6 +50,8 @@ class _BalanceWidgetState extends State<BalanceWidget> {
               try {
                 //jika amountText adalah huruf maka program akan masuk ke catch(e)
                 double amount = double.parse(amountText);
+                String amountTemp = amount.toStringAsFixed(2); //memastikan hanya 2 angka dibelakang koma
+                amount = double.parse(amountTemp);
 
                 Provider.of<UserProvider>(context, listen: false).topUp(amount);
 
