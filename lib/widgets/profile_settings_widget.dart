@@ -78,7 +78,11 @@ class _ProfileSettingsWidgetState extends State<ProfileSettingsWidget> {
 
                 if (_phoneNumberController.text.length < 10 ||
                     _phoneNumberController.text.length > 15) {
-                  throw Exception('phone number mush be 10-15 digits');
+                  throw Exception('phone number must be 10-15 digits');
+                }
+
+                if (!RegExp(r'^\d{10,15}$').hasMatch(_phoneNumberController.text)) {
+                  throw Exception('phone number must be number');
                 }
 
                 Provider.of<UserProvider>(context, listen: false).updateProfile(
